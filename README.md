@@ -1,6 +1,5 @@
 # 🎰 Casino Core API
-> **Note:** AI tools were used as a learning assistant to explain Java, Spring Boot, and backend development concepts, as well as to discuss architecture, best practices, and code reviews.
-The project implementation, debugging, testing, and refactoring were completed by the author as part of the learning process.
+> **Note:** I used AI as a learning assistant to better understand Java, backend development concepts, and best practices. I implemented, debugged, and tested the project myself.
 
 A personal backend project built with **Java** and **Spring Boot** that simulates the core functionality of an online casino wallet system.
 
