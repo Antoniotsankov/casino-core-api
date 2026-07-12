@@ -8,7 +8,6 @@ import org.example.casinocoreapi.dto.PageResponse;
 import org.example.casinocoreapi.dto.TransactionResponse;
 import org.example.casinocoreapi.enums.TransactionType;
 import org.example.casinocoreapi.service.TransactionService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +36,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "404", description = "Wallet not found")
     })
     public ResponseEntity<PageResponse<TransactionResponse>> getTransactionsByWalletId(
-
             @PathVariable Long walletId,
-
             @RequestParam(required = false)
             TransactionType type,
 

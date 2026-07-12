@@ -1,6 +1,4 @@
 package org.example.casinocoreapi.model;
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +6,11 @@ import org.example.casinocoreapi.enums.Currency;
 import org.example.casinocoreapi.enums.WalletStatus;
 
 import java.math.BigDecimal;
-
 @Getter
 @Setter
 @Entity
 @Table(name = "wallets")
 public class Wallet {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,5 +26,4 @@ public class Wallet {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 }

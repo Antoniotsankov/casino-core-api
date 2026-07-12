@@ -7,11 +7,8 @@ import org.example.casinocoreapi.enums.UserStatus;
 import org.example.casinocoreapi.exception.MemberIdAlreadyExistsException;
 import org.example.casinocoreapi.exception.UserNotFoundException;
 import org.example.casinocoreapi.model.User;
-import org.springframework.stereotype.Service;
 import org.example.casinocoreapi.repository.UserRepository;
-
-
-
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,30 +16,25 @@ import java.util.List;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final WalletService walletService;
 
-    public UserService(UserRepository userRepository, WalletService walletService){
+    public UserService(UserRepository userRepository, WalletService walletService) {
         this.userRepository = userRepository;
         this.walletService = walletService;
     }
 
-    public List<UserResponse> getUserByUsername(String username){
+    public List<UserResponse> getUserByUsername(String username) {
 
         List<User> users = userRepository.findByUsername(username);
 
-        List<UserResponse> responses = new ArrayList<>();
-
-        for (User user : users) {
-
-            UserResponse response = buildUserResponse(user);
-            responses.add(response);
-        }
-        return responses;
+        return users.stream()
+                .map(this::buildUserResponse)
+                .toList();
     }
 
     private UserResponse buildUserResponse(User user) {
-
         UserResponse response = new UserResponse();
 
         response.setId(user.getId());
@@ -53,11 +45,9 @@ public class UserService {
         response.setCreatedAt(user.getCreatedAt());
 
         return response;
-
     }
 
     public UserResponse getUserById(Long id) {
-
         User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
@@ -67,39 +57,26 @@ public class UserService {
         return buildUserResponse(user);
     }
 
-    public List<UserResponse> getUserByCountryAndStatus(String country, UserStatus status){
+    public List<UserResponse> getUserByCountryAndStatus(String country, UserStatus status) {
 
         List<User> users = userRepository.findByCountryAndStatus(country, status);
 
-        List<UserResponse> responses = new ArrayList<>();
-
-        for (User user : users) {
-
-            UserResponse response = buildUserResponse(user);
-            responses.add(response);
-        }
-        return responses;
+        return users.stream()
+                .map(this::buildUserResponse)
+                .toList();
     }
 
     public List<UserResponse> getUser() {
 
         List<User> users = userRepository.findAll();
 
-        List<UserResponse> responses = new ArrayList<>();
-
-        for (User user : users) {
-
-            UserResponse response = buildUserResponse(user);
-            responses.add(response);
-        }
-        return responses;
-
-
+        return users.stream()
+                .map(this::buildUserResponse)
+                .toList();
     }
 
     private User buildUser(
             String memberId,
-
             String username,
             String country,
             UserStatus status) {
@@ -116,8 +93,7 @@ public class UserService {
     }
 
     public UserResponse createUser(CreateUserRequest request) {
-
-        if(userRepository.existsByMemberId(request.getMemberId())) {
+        if (userRepository.existsByMemberId(request.getMemberId())) {
             throw new MemberIdAlreadyExistsException("Member ID already exists");
         }
 
@@ -129,16 +105,16 @@ public class UserService {
         );
 
         User savedUser = userRepository.save(user);
+
         walletService.createWallet(savedUser);
 
         return buildUserResponse(savedUser);
     }
 
-    public UserResponse updateUser(Long id, UpdateUserRequest request){
-
+    public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = userRepository.findById(id).orElse(null);
 
-        if(user == null){
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
@@ -151,8 +127,7 @@ public class UserService {
         return buildUserResponse(updatedUser);
     }
 
-    public void deleteUser(Long id){
-
+    public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
@@ -161,6 +136,4 @@ public class UserService {
 
         userRepository.delete(user);
     }
-
-
 }

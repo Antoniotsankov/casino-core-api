@@ -11,13 +11,10 @@ import org.example.casinocoreapi.enums.UserStatus;
 import org.example.casinocoreapi.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.example.casinocoreapi.model.User;
 import org.example.casinocoreapi.dto.UpdateUserRequest;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-
-
 @RestController
 @Tag(
         name = "User API",
@@ -130,11 +127,11 @@ public class UserController {
     })
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable Long id,
-            @RequestBody UpdateUserRequest request){
+            @RequestBody UpdateUserRequest request) {
 
-            UserResponse user = userService.updateUser(id, request);
+        UserResponse user = userService.updateUser(id, request);
 
-            return ResponseEntity.ok(user);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/users/{id}")
@@ -152,7 +149,5 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
-
-
 }
 

@@ -5,15 +5,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.example.casinocoreapi.dto.*;
-import org.example.casinocoreapi.model.Wallet;
 import org.example.casinocoreapi.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController //казва на Spring, че класът приема HTTP заявки и връща JSON
-@RequestMapping("/wallets") //задава общия URL префикс за всички методи в този Controller.
+@RestController
+@RequestMapping("/wallets")
 @Tag(
         name = "Wallet API",
         description = "Operations related to wallet management"
@@ -55,6 +53,7 @@ public class WalletController {
     })
     public ResponseEntity<WalletResponse> deposit(
             @Valid @RequestBody DepositRequest request) {
+
         WalletResponse wallet = walletService.deposit(request);
 
         return ResponseEntity.ok(wallet);
@@ -70,8 +69,9 @@ public class WalletController {
             @ApiResponse(responseCode = "400", description = "Insufficient balance or invalid request"),
             @ApiResponse(responseCode = "404", description = "Wallet not found")
     })
-    public ResponseEntity<WalletResponse> withdraw (
+    public ResponseEntity<WalletResponse> withdraw(
             @Valid @RequestBody WithdrawRequest request) {
+
         WalletResponse wallet = walletService.withdraw(request);
 
         return ResponseEntity.ok(wallet);
@@ -87,11 +87,12 @@ public class WalletController {
             @ApiResponse(responseCode = "400", description = "Insufficient balance or invalid request"),
             @ApiResponse(responseCode = "404", description = "Wallet not found")
     })
-            public ResponseEntity<WalletResponse> bet (
+    public ResponseEntity<WalletResponse> bet(
             @Valid @RequestBody BetRequest request) {
+
         WalletResponse wallet = walletService.bet(request);
 
-                return ResponseEntity.ok(wallet);
+        return ResponseEntity.ok(wallet);
     }
 
     @PostMapping("/win")
@@ -104,11 +105,11 @@ public class WalletController {
             @ApiResponse(responseCode = "400", description = "Invalid request"),
             @ApiResponse(responseCode = "404", description = "Wallet not found")
     })
-    public ResponseEntity<WalletResponse> win (
-        @Valid @RequestBody WinRequest request) {
+    public ResponseEntity<WalletResponse> win(
+            @Valid @RequestBody WinRequest request) {
+
         WalletResponse wallet = walletService.win(request);
 
         return ResponseEntity.ok(wallet);
     }
-
 }

@@ -16,12 +16,15 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private BigDecimal amount;
+
     @Enumerated(EnumType.STRING)
     private TransactionType type;
+
     private LocalDateTime createdAt;
+
     @ManyToOne
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
-
 }

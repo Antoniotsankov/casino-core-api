@@ -2,25 +2,21 @@ package org.example.casinocoreapi.service;
 
 import org.example.casinocoreapi.dto.PageResponse;
 import org.example.casinocoreapi.dto.TransactionResponse;
-import org.example.casinocoreapi.dto.UserResponse;
 import org.example.casinocoreapi.enums.TransactionType;
 import org.example.casinocoreapi.model.Transaction;
-import org.example.casinocoreapi.model.User;
 import org.example.casinocoreapi.model.Wallet;
 import org.example.casinocoreapi.repository.TransactionRepository;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import java.util.List;
 
 @Service
 public class TransactionService {
+
     private final TransactionRepository transactionRepository;
 
     public TransactionService(TransactionRepository transactionRepository) {
@@ -68,7 +64,6 @@ public class TransactionService {
     }
 
     private TransactionResponse buildTransactionResponse(Transaction transaction) {
-
         TransactionResponse response = new TransactionResponse();
 
         response.setId(transaction.getId());
@@ -77,10 +72,12 @@ public class TransactionService {
         response.setCreatedAt(transaction.getCreatedAt());
 
         return response;
-
     }
 
-    public void createTransaction(Wallet wallet, BigDecimal amount, TransactionType type) {
+    public void createTransaction(
+            Wallet wallet,
+            BigDecimal amount,
+            TransactionType type) {
 
         Transaction transaction = new Transaction();
 
@@ -91,5 +88,4 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
     }
-
 }

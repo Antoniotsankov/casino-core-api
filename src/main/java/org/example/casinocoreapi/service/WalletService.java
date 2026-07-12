@@ -12,13 +12,14 @@ import org.example.casinocoreapi.repository.WalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
 public class WalletService {
+
     private final WalletRepository walletRepository;
     private final TransactionService transactionService;
-
 
     public WalletService(WalletRepository walletRepository, TransactionService transactionService) {
         this.walletRepository = walletRepository;
@@ -26,29 +27,27 @@ public class WalletService {
     }
 
     public Wallet createWallet(User user) {
-
         Wallet wallet = new Wallet();
 
         wallet.setBalance(BigDecimal.ZERO);
-        wallet.setCurrency(determineCurrency((user.getCountry())));
+        wallet.setCurrency(determineCurrency(user.getCountry()));
         wallet.setStatus(WalletStatus.ACTIVE);
         wallet.setUser(user);
 
         walletRepository.save(wallet);
-        return wallet;
 
+        return wallet;
     }
 
     public Wallet getWalletByUserId(Long userId) {
-
         Optional<Wallet> wallet = walletRepository.findByUserId(userId);
+
         return wallet.orElseThrow(
                 () -> new WalletNotFoundException("Wallet not found")
         );
     }
 
     public WalletResponse getWalletResponseByUserId(Long userId) {
-
         Wallet wallet = getWalletByUserId(userId);
 
         return buildWalletResponse(wallet);
@@ -56,24 +55,16 @@ public class WalletService {
 
     private Currency determineCurrency(String country) {
 
-        if (country.equalsIgnoreCase("Bulgaria")) {
-            return Currency.BGN;
-        }
-        if (country.equalsIgnoreCase("Germany")) {
-            return Currency.EUR;
-        }
-        if (country.equalsIgnoreCase("United Kingdom")) {
-            return Currency.GBP;
-        }
-        if (country.equalsIgnoreCase("USA")) {
-            return Currency.USD;
-        }
-
-        return Currency.EUR;
+        return switch (country.trim().toLowerCase(Locale.ROOT)) {
+            case "bulgaria" -> Currency.BGN;
+            case "germany" -> Currency.EUR;
+            case "united kingdom" -> Currency.GBP;
+            case "usa" -> Currency.USD;
+            default -> Currency.EUR;
+        };
     }
 
     private WalletResponse buildWalletResponse(Wallet wallet) {
-
         WalletResponse response = new WalletResponse();
 
         response.setId(wallet.getId());
@@ -85,11 +76,9 @@ public class WalletService {
     }
 
     private WalletResponse increaseBalance(Wallet wallet, BigDecimal amount, TransactionType type) {
-        wallet.setBalance(
-                wallet.getBalance().add(amount));
+        wallet.setBalance(wallet.getBalance().add(amount));
 
         Wallet updatedWallet = walletRepository.save(wallet);
-
 
         transactionService.createTransaction(
                 updatedWallet,
@@ -101,14 +90,11 @@ public class WalletService {
     }
 
     private WalletResponse decreaseBalance(Wallet wallet, BigDecimal amount, TransactionType type) {
-
         if (wallet.getBalance().compareTo(amount) < 0) {
             throw new InsufficientBalanceException("Insufficient balance");
         }
 
-        wallet.setBalance(
-                wallet.getBalance().subtract(amount)
-        );
+        wallet.setBalance(wallet.getBalance().subtract(amount));
 
         Wallet updatedWallet = walletRepository.save(wallet);
 
@@ -122,7 +108,6 @@ public class WalletService {
     }
 
     public WalletResponse deposit(DepositRequest request) {
-
         Wallet wallet = getWalletByUserId(request.getUserId());
 
         return increaseBalance(
@@ -133,7 +118,6 @@ public class WalletService {
     }
 
     public WalletResponse withdraw(WithdrawRequest request) {
-
         Wallet wallet = getWalletByUserId(request.getUserId());
 
         return decreaseBalance(
@@ -144,7 +128,6 @@ public class WalletService {
     }
 
     public WalletResponse bet(BetRequest request) {
-
         Wallet wallet = getWalletByUserId(request.getUserId());
 
         return decreaseBalance(
@@ -155,7 +138,6 @@ public class WalletService {
     }
 
     public WalletResponse win(WinRequest request) {
-
         Wallet wallet = getWalletByUserId(request.getUserId());
 
         return increaseBalance(
@@ -165,5 +147,3 @@ public class WalletService {
         );
     }
 }
-
-
