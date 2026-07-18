@@ -27,10 +27,8 @@ import static org.mockito.Mockito.when;
 public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private WalletService walletService;
-
     @InjectMocks
     private UserService userService;
 
